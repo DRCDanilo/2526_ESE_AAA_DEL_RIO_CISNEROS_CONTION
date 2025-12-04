@@ -6,3 +6,22 @@
  */
 
 #include "motor_control/motor.h"
+#include "tim.h"
+
+
+#define CCRR1
+
+void motor_init(int duty_cycle)
+{
+
+	//int duty_cycle = 60;
+	int CCR1 = (htim1.Init.Period * duty_cycle)/100;
+	int CCR2 = htim1.Init.Period - CCR1;
+
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+	HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);
+	HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, CCR1);//1020
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, CCR2);//680
+}
