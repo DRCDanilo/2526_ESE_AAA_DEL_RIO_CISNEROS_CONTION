@@ -8,10 +8,14 @@
 #include "app.h"
 
 #include "user_interface/shell.h"
-
 #include "motor_control/motor.h"
+#include "adc.h"
 
 static char shell_uart2_received_char;
+
+
+extern h_shell_t hshell1;
+
 
 void init_device(void){
 // Initialisation user interface
@@ -21,6 +25,7 @@ void init_device(void){
 	shell_init(&hshell1);
 	HAL_UART_Receive_IT(&huart2, (uint8_t *)&shell_uart2_received_char, 1);
 
+
 	// LED
 	led_init();
 
@@ -29,7 +34,7 @@ void init_device(void){
 //
 // Initialisation motor control
 	// MOTOR
-	motor_init(60);
+
 	// ASSERV (PID)
 //	asserv_init();
 //
@@ -61,5 +66,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 }
 
 void loop(){
+
 
 }

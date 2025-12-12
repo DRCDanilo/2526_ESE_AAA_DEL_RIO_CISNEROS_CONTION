@@ -6,6 +6,9 @@
  */
 
 #include "user_interface/shell.h"
+#include "motor_control/motor.h"
+#include <stdlib.h>
+#include <stdint.h>
 
 h_shell_t hshell1;
 
@@ -85,6 +88,92 @@ static int sh_test_list(h_shell_t* h_shell, int argc, char** argv)
 
 
 
+static int sh_set_ccr(h_shell_t* h_shell, int argc, char** argv)
+{
+    // Check if there is an argument passed after "SET_CCR"
+    if (argc != 2)
+    {
+        int size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "Usage: SET_CCR <alpha>\r\n");
+        h_shell->drv.transmit(h_shell->print_buffer, size);
+        return -1;
+    }
+
+    // Parse the argument as an integer (alpha)
+    int alpha = atoi(argv[1]);
+
+    // Call the motor_init function with the parsed alpha
+    motor_init(alpha);
+
+    // Respond with a confirmation
+    int size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "Motor initialized with alpha: %d\r\n", alpha);
+    h_shell->drv.transmit(h_shell->print_buffer, size);
+
+    return 0;
+}
+
+
+
+static int sh_start(h_shell_t* h_shell, int argc, char** argv)
+{
+    // Check if there is an argument passed after "SET_CCR"
+    if (argc != 2)
+    {
+        int size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "Usage: SET_CCR <alpha>\r\n");
+        h_shell->drv.transmit(h_shell->print_buffer, size);
+        return -1;
+    }
+
+    // Parse the argument as an integer (alpha)
+    //int alpha = atoi(argv[1]);
+
+    // Call the motor_init function with the parsed alpha
+    start();
+
+    // Respond with a confirmation
+    int size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "Motor started \r\n");
+    h_shell->drv.transmit(h_shell->print_buffer, size);
+
+    return 0;
+}
+
+
+static int sh_stop(h_shell_t* h_shell, int argc, char** argv)
+{
+    // Check if there is an argument passed after "SET_CCR"
+    if (argc != 2)
+    {
+        int size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "Usage: SET_CCR <alpha>\r\n");
+        h_shell->drv.transmit(h_shell->print_buffer, size);
+        return -1;
+    }
+
+    // Parse the argument as an integer (alpha)
+    //int alpha = atoi(argv[1]);
+
+    // Call the motor_init function with the parsed alpha
+    stop();
+
+    // Respond with a confirmation
+    int size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "Motor stopped \r\n");
+    h_shell->drv.transmit(h_shell->print_buffer, size);
+
+    return 0;
+}
+
+
+static int sh_start_adc(h_shell_t* h_shell, int argc, char** argv)
+{
+    uint32_t data = start_adc();
+
+    // Respond with a confirmation
+    int size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "ADC Value: %u\r\n", data);
+    h_shell->drv.transmit(h_shell->print_buffer, size);
+
+    return 0;
+}
+
+
+
 /**
  * @brief Initializes the shell instance.
  *
@@ -104,6 +193,10 @@ void shell_init(h_shell_t* h_shell)
 
 	shell_add(h_shell, "help", sh_help, "Help");
 	shell_add(h_shell, "test", sh_test_list, "Test list");
+	shell_add(h_shell, "SETCCR", sh_set_ccr, "Set motor CCR");
+	shell_add(h_shell, "start", sh_start, "Start motor");
+	shell_add(h_shell, "stop", sh_stop, "Stop motor");
+	shell_add(h_shell, "adcValue", sh_start_adc, "ADC Value:");
 }
 
 /**
@@ -227,3 +320,8 @@ int shell_run(h_shell_t* h_shell)
 	}
 	return 0;
 }
+
+
+
+
+
