@@ -12,6 +12,8 @@
 
 h_shell_t hshell1;
 
+#define MAX_ALPHA_VALUE 100
+
 /**
  * @brief Transmit function for shell driver using UART2
  */
@@ -101,8 +103,20 @@ static int sh_set_ccr(h_shell_t* h_shell, int argc, char** argv)
     // Parse the argument as an integer (alpha)
     int alpha = atoi(argv[1]);
 
-    // Call the motor_init function with the parsed alpha
-    motor_init(alpha);
+    if( (alpha >= 0) && (alpha <= 100))
+    {
+    	// Call the function with the selected alpha
+		motor_set_ccr(alpha);
+    }
+    else
+    {
+    	int size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "Alpha value greater than 100\r\n");
+		h_shell->drv.transmit(h_shell->print_buffer, size);
+		size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "Alpha value set to 100.\r\n");
+		h_shell->drv.transmit(h_shell->print_buffer, size);
+		alpha = MAX_ALPHA_VALUE;
+		motor_set_ccr(alpha);
+    }
 
     // Respond with a confirmation
     int size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "CCR Motor initialized with alpha: %d\r\n", alpha);
@@ -115,22 +129,10 @@ static int sh_set_ccr(h_shell_t* h_shell, int argc, char** argv)
 
 static int sh_start(h_shell_t* h_shell, int argc, char** argv)
 {
-    // Check if there is an argument passed after "SET_CCR"
-    if (argc != 2)
-    {
-        int size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "Usage: SET_CCR <alpha>\r\n");
-        h_shell->drv.transmit(h_shell->print_buffer, size);
-        return -1;
-    }
-
-    // Parse the argument as an integer (alpha)
-    //int alpha = atoi(argv[1]);
-
-    // Call the motor_init function with the parsed alpha
-    start();
+    motor_start();
 
     // Respond with a confirmation
-    int size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "Motor started \r\n");
+    int size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "Motor start command executed!\r\n");
     h_shell->drv.transmit(h_shell->print_buffer, size);
 
     return 0;
@@ -139,22 +141,11 @@ static int sh_start(h_shell_t* h_shell, int argc, char** argv)
 
 static int sh_stop(h_shell_t* h_shell, int argc, char** argv)
 {
-    // Check if there is an argument passed after "SET_CCR"
-    if (argc != 2)
-    {
-        int size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "Usage: SET_CCR <alpha>\r\n");
-        h_shell->drv.transmit(h_shell->print_buffer, size);
-        return -1;
-    }
 
-    // Parse the argument as an integer (alpha)
-    //int alpha = atoi(argv[1]);
-
-    // Call the motor_init function with the parsed alpha
-    stop();
+    motor_stop();
 
     // Respond with a confirmation
-    int size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "Motor stopped \r\n");
+    int size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "Motor stop command executed!\r\n");
     h_shell->drv.transmit(h_shell->print_buffer, size);
 
     return 0;
@@ -193,7 +184,7 @@ void shell_init(h_shell_t* h_shell)
 
 	shell_add(h_shell, "help", sh_help, "Help");
 	shell_add(h_shell, "test", sh_test_list, "Test list");
-	shell_add(h_shell, "SET_CCR", sh_set_ccr, "Set motor CCR");
+	shell_add(h_shell, "SET_CCR", sh_set_ccr, "Set CCR motor. Value between 0 and 100.");
 	shell_add(h_shell, "start", sh_start, "Start motor");
 	shell_add(h_shell, "stop", sh_stop, "Stop motor");
 	shell_add(h_shell, "adcValue", sh_start_adc, "ADC Value:");

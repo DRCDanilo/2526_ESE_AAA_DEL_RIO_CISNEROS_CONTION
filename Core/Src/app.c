@@ -10,6 +10,7 @@
 #include "user_interface/shell.h"
 #include "motor_control/motor.h"
 #include "adc.h"
+#include "user_interface/led.h"
 
 static char shell_uart2_received_char;
 
@@ -34,6 +35,7 @@ void init_device(void){
 //
 // Initialisation motor control
 	// MOTOR
+	motor_init();
 
 	// ASSERV (PID)
 //	asserv_init();
