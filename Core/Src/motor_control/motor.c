@@ -8,7 +8,7 @@
 #include "motor_control/motor.h"
 #include "tim.h"
 
-
+#define CCR_SPEED_ZERO 50
 #define CCRR1
 
 
@@ -24,7 +24,7 @@ void motor_init(int duty_cycle)
 void start()
 {
 
-	int CCR1 = (htim1.Init.Period * 50)/100;
+	int CCR1 = (htim1.Init.Period * CCR_SPEED_ZERO)/100;
 	int CCR2 = htim1.Init.Period - CCR1;
 
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);

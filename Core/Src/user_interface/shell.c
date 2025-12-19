@@ -28,7 +28,7 @@ h_shell_t hshell1;
  */
 static int is_character_valid(char c)
 {
-	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || (c == ' ') || (c == '=');
+	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || (c == ' ') || (c == '=') || (c == '_');
 }
 
 static int is_string_valid(char* str)
@@ -93,7 +93,7 @@ static int sh_set_ccr(h_shell_t* h_shell, int argc, char** argv)
     // Check if there is an argument passed after "SET_CCR"
     if (argc != 2)
     {
-        int size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "Usage: SET_CCR <alpha>\r\n");
+        int size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "Two arguments are needed!\r\n");
         h_shell->drv.transmit(h_shell->print_buffer, size);
         return -1;
     }
@@ -105,7 +105,7 @@ static int sh_set_ccr(h_shell_t* h_shell, int argc, char** argv)
     motor_init(alpha);
 
     // Respond with a confirmation
-    int size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "Motor initialized with alpha: %d\r\n", alpha);
+    int size = snprintf(h_shell->print_buffer, SHELL_PRINT_BUFFER_SIZE, "CCR Motor initialized with alpha: %d\r\n", alpha);
     h_shell->drv.transmit(h_shell->print_buffer, size);
 
     return 0;
@@ -193,7 +193,7 @@ void shell_init(h_shell_t* h_shell)
 
 	shell_add(h_shell, "help", sh_help, "Help");
 	shell_add(h_shell, "test", sh_test_list, "Test list");
-	shell_add(h_shell, "SETCCR", sh_set_ccr, "Set motor CCR");
+	shell_add(h_shell, "SET_CCR", sh_set_ccr, "Set motor CCR");
 	shell_add(h_shell, "start", sh_start, "Start motor");
 	shell_add(h_shell, "stop", sh_stop, "Stop motor");
 	shell_add(h_shell, "adcValue", sh_start_adc, "ADC Value:");
