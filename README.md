@@ -39,16 +39,23 @@ On a testé le code avec le moteur.
 
 ## 7. Commande en boucle ouverte, mesure de Vitesse et de courant
 
+### 7.1 Commande de la vitesse
+
+On a ajouté les fonctions : 
+
+- Commande start : permet de fixer le rapport cyclique à 50% (vitesse nulle) et d'activer la génération des pwm (HAL_TIM_PWM_Start et HAL_TIMEx_PWMN_Start),
+- Commande stop : permet de désactiver la génération des PWM.
+
 ### 7.2. Mesure de courant
 
-Les currents à mésurer sont à la sortie des capteurs GO 10-SME.
+- Les currents à mésurer sont à la sortie des capteurs GO 10-SME.
 
-Définir les fonctions de transfert des capteurs de mesure de courant: I = 1,65 + 0,05xImes.
+- Définir les fonctions de transfert des capteurs de mesure de courant: I = 1,65 + 0,05xImes.
 
-Les pin du stm32 utilisés pour faire ces mesures de courant sont: PA1 -> ADC1_IN2, PB1 -> ADC1_IN12.
+- Les pin du stm32 utilisés pour faire ces mesures de courant sont: PA1 -> ADC1_IN2, PB1 -> ADC1_IN12.
 
-Pour la mesure ADC en Polling mode, nous avons eu des problèmes avec la carte : nous avons mésuré 4095 comme la valeur du ADC avec la carte que nous avons travaillé : 
+- Pour la mesure ADC en Polling mode, nous avons eu des problèmes avec la carte : nous avons mésuré 4095 comme la valeur du ADC avec la carte que nous avons travaillé : 
 
-<img width="220" height="270" alt="image" src="https://github.com/user-attachments/assets/327f1fa8-6dd2-462f-9874-e5ef74468157" />
+	<img width="220" height="270" alt="image" src="https://github.com/user-attachments/assets/327f1fa8-6dd2-462f-9874-e5ef74468157" />
 
-Par contre, nous avons testé notre code avec d'autre carte et la valeur a été 1850.
+	Par contre, nous avons testé notre code avec d'autre carte et la valeur a été 1850.
