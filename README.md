@@ -59,3 +59,5 @@ On a ajouté les fonctions :
 	<img width="220" height="270" alt="image" src="https://github.com/user-attachments/assets/327f1fa8-6dd2-462f-9874-e5ef74468157" />
 
 	Par contre, nous avons testé notre code avec d'autre carte et la valeur a été 1850.
+
+### 7.3 Mesure de vitesse
